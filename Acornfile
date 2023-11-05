@@ -1,0 +1,48 @@
+args: {
+	// Comma separate list of keys to prompt the user for.
+	secretKeys: ""
+	// A multiline markdown formatted string to display instructions to the user to get the needed secret info
+	instructions: """
+	## Pass Instructions variable	
+	"""
+}
+
+jobs: helper: {
+	build: context: "."
+	ports: publish: [
+		{
+			targetPort: 8000
+			protocol:   "http"
+			path:       "/helper?token=@{secrets.cred-helper-auth.token}"
+		},
+	]
+	env: {
+		HELPER_AUTH_TOKEN: "secret://cred-helper-auth/token"
+		SECRET_KEY:        "secret://secret-key/token"
+		FORM_FIELDS:       "\(args.secretKeys)"
+		ACORN_NAME:        "@{acorn.name}"
+	}
+	files: "/acorn/instructions.txt": args.instructions
+	events: ["create"]
+	if args.dev {
+		dirs: "/app":     "./"
+		env: FLASK_DEBUG: "1"
+	}
+}
+
+secrets: "cred-helper-auth": {
+	type: "token"
+	params: {
+		length:     64
+		characters: "a-zA-Z0-9"
+	}
+}
+
+secrets: "secret-key": {
+	type: "token"
+}
+
+secrets: output: {
+	type: "generated"
+	params: job: "helper"
+}
