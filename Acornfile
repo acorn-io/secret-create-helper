@@ -1,5 +1,5 @@
-name:        "Credential Helper"
-description: "Click here to add Credentials to deploy"
+name:        "Secret Create Helper"
+description: "Click here to create secrets required to deploy"
 readme:      "./README.md"
 
 args: {

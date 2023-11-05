@@ -14,7 +14,7 @@ Here is an example of how to add this Acorn to your Acornfile:
 
 ```cue
 acorns: helper: {
-    image: "ghcr.io/acorn-io/cred-helper:v#.#.#"
+    image: "ghcr.io/acorn-io/secret-create-helper:v#.#.#"
     serviceArgs: {
         secretKeys: "public_key,private_key,project_id"
         instructions: localData.credInfo
