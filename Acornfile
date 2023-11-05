@@ -1,3 +1,7 @@
+name:        "Credential Helper"
+description: "Click here to add Credentials to deploy"
+readme:      "./README.md"
+
 args: {
 	// Comma separate list of keys to prompt the user for.
 	secretKeys: ""
