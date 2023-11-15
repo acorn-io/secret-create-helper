@@ -5,6 +5,8 @@ readme:      "./README.md"
 args: {
 	// Comma separate list of keys to prompt the user for.
 	secretKeys: ""
+	// Comma separated list of textfield keys to prompt the user for.
+	textareaSecretKeys: ""
 	// A multiline markdown formatted string to display instructions to the user to get the needed secret info
 	instructions: """
 	## Pass Instructions variable	
@@ -21,10 +23,11 @@ jobs: helper: {
 		},
 	]
 	env: {
-		HELPER_AUTH_TOKEN: "secret://cred-helper-auth/token"
-		SECRET_KEY:        "secret://secret-key/token"
-		FORM_FIELDS:       "\(args.secretKeys)"
-		ACORN_NAME:        "@{acorn.name}"
+		HELPER_AUTH_TOKEN:    "secret://cred-helper-auth/token"
+		SECRET_KEY:           "secret://secret-key/token"
+		FORM_FIELDS:          "\(args.secretKeys)"
+		TEXTAREA_FORM_FIELDS: "\(args.textareaSecretKeys)"
+		ACORN_NAME:           "@{acorn.name}"
 	}
 	files: "/acorn/instructions.txt": args.instructions
 	events: ["create"]
