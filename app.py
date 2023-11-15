@@ -13,6 +13,7 @@ app = Flask(__name__)
 app.config["AUTH_TOKEN"] = os.environ.get("HELPER_AUTH_TOKEN")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.config["FORM_FIELDS"] = os.environ.get("FORM_FIELDS")
+app.config["TEXTAREA_FIELDS"] = os.environ.get("TEXTAREA_FORM_FIELDS")
 
 csrf = CSRFProtect(app)
 
@@ -63,8 +64,10 @@ def index():
 
     if request.method == "POST":
         form_data = {}
-        for field in app.config["FORM_FIELDS"].split(","):
-            form_data[field] = request.form.get(field)
+        form_fields = get_form_keys_by_type()
+        for form_field_type in form_fields.keys():
+            for field in form_fields[form_field_type]:
+                form_data[field] = request.form.get(field)
 
         output_body = {"type": "opaque", "data": form_data}
         output_json = json.dumps({"secrets": {"output": output_body}})
@@ -88,10 +91,11 @@ def index():
         flash("Instructions information not found.", "error")
 
     csrf = generate_csrf()
+    form = get_form_keys_by_type()
 
     return render_template(
         "main_page.html",
-        fields=app.config["FORM_FIELDS"].split(","),
+        fields=form,
         display_content=display_content,
         csrf_token=csrf,
     )
@@ -105,3 +109,17 @@ def success_page():
 @app.route("/unauthorized")
 def unauthorized():
     return render_template("unauthorized_page.html")
+
+
+def get_form_keys_by_type():
+    form = {}
+
+    text_field_list = app.config["FORM_FIELDS"].split(",")
+    textarea_field_list = app.config["TEXTAREA_FIELDS"].split(",")
+
+    if text_field_list != [""]:
+        form["text_fields"] = text_field_list
+    if textarea_field_list != [""]:
+        form["textarea_fields"] = textarea_field_list
+
+    return form

@@ -16,7 +16,7 @@ Here is an example of how to add this Acorn to your Acornfile:
 acorns: helper: {
     image: "ghcr.io/acorn-io/secret-create-helper:v#.#.#"
     serviceArgs: {
-        secretKeys: "public_key,private_key,project_id"
+        secretKeys: "public_key,secret_key,project_id"
         instructions: localData.credInfo
     }
 }
@@ -36,6 +36,8 @@ When run, the helper acorn will create an opaque secret with the keys provided a
 secrets: "api-keys": alias: "helper.output"
 // ...
 ```
+
+For secrets that involve multiple lines like PEMs, you can use the `textareaSecretKeys` argument to capture that value. The `textareaSecretKeys` is also a comma separated list of keys to display.
 
 ### What does this look like?
 
